@@ -7,8 +7,11 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<TaskManager>();
 
+var dbPath = "/app/data/taskmanager.db";
+Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
+
 builder.Services.AddDbContext<TaskManagerDbContext>(options =>
-    options.UseSqlite("Data Source=/app/data/taskmanager.db");
+    options.UseSqlite("Data Source=/app/data/taskmanager.db"));
 
 var app = builder.Build();
 
