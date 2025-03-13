@@ -31,4 +31,10 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<TaskManagerDbContext>();
+    dbContext.Database.Migrate(); // Run migrations automatically on startup
+}
+
 app.Run();
