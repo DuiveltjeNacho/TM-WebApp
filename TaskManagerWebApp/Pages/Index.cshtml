@@ -1,0 +1,86 @@
+﻿@page
+@model TaskManagerWebApp.Pages.IndexModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Task Manager</h1>
+
+        <!-- Add Task Form -->
+        <form method="post" asp-page-handler="AddTask">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input type="text" class="form-control" id="Name" asp-for="Name" required />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <input type="text" class="form-control" id="Description" asp-for="Description" required />
+            </div>
+            <div class="mb-3">
+                <label for="DueDate" class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="DueDate" asp-for="DueDate" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Task</button>
+        </form>
+
+        <hr />
+
+        <!-- Tasks List -->
+        <h3>Tasks</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.Tasks)
+                {
+                    <tr>
+                        <td>@task.Name</td>
+                        <td>@task.Description</td>
+                        <td>@task.DueDate.ToShortDateString()</td>
+                        <td>@if (task.IsCompleted)
+                            {
+                                <span style="color: green; font-weight: bold;"> Completed</span>
+                            }
+                            else
+                            {
+                                <span style="color: red; font-weight: bold;"> Not Completed</span>
+                            }
+                        </td>
+                        <td>
+                            <!-- Complete Button -->
+                            <form method="post" style="display:inline-block; margin-right: 10px;">
+                                <input type="hidden" name="TaskNumber" value="@task.TaskId" />
+                                <button type="submit" asp-page-handler="ToggleCompleteTask" style="padding: 5px 10px; margin-right: 5px;" class="btn btn-toggle @(task.IsCompleted ? "btn-warning" : "btn-success")">
+                                    @(task.IsCompleted ? "Undo" : "Complete")
+                                </button>
+                            </form>
+
+                            <!-- Delete Button -->
+                            <form method="post" style="display:inline-block;">
+                                <input type="hidden" name="TaskNumber" value="@task.TaskId" />
+                                <button type="submit" asp-page-handler="DeleteTask" style="padding: 5px 10px; margin-left: 5px;" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+</body>
+</html>
