@@ -1,0 +1,10 @@
+bin/
+obj/
+*.md
+*.git
+.gitignore
+Dockerfile
+Dockerfile.old
+node_modules/
+.vscode/
+.env
