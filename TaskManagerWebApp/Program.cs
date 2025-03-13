@@ -11,7 +11,7 @@ var dbPath = "/app/data/taskmanager.db";
 Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
 
 builder.Services.AddDbContext<TaskManagerDbContext>(options =>
-    options.UseSqlite("Data Source=/app/data/taskmanager.db"));
+    options.UseSqlite($"Data Source={dbPath}"));
 
 var app = builder.Build();
 
