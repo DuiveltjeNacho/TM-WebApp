@@ -1,23 +1,18 @@
-# Use the official .NET SDK image from Microsoft
+# Use official .NET 8 runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-# Use the .NET SDK for building and restoring dependencies
+# Use .NET 8 SDK image for building the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["TaskManagerWebApp/TaskManagerWebApp.csproj", "TaskManagerWebApp/"]
-RUN dotnet restore "TaskManagerWebApp/TaskManagerWebApp.csproj"
+COPY ["TaskManagerWebApp.csproj", "./"]
+RUN dotnet restore "TaskManagerWebApp.csproj"
 COPY . .
-WORKDIR "/src/TaskManagerWebApp"
-RUN dotnet build "TaskManagerWebApp.csproj" -c Release -o /app/build
-
-# Publish the app
-FROM build AS publish
 RUN dotnet publish "TaskManagerWebApp.csproj" -c Release -o /app/publish
 
-# Final stage: set up the app in the base image
+# Final stage: Run the application
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "TaskManagerWebApp.dll"]
